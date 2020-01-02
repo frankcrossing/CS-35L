@@ -1,0 +1,308 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 7
+
+1. 
+I get a copy of the repository in Git format with the command:
+
+git clone ~eggert/src/gnu/diffutils
+
+2.
+Get a log of changes and put them into file:
+
+cd diffutils
+
+git log > git-log.txt
+
+3.
+Generate a list of tags and put them into file:
+
+cd diffutils
+
+git tag > git-tags.txt
+
+4.
+Find the commit, generate a patch, and put it in the file:
+
+git log --grep="maint: quote" --all
+
+git format-patch -1 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f --stdout > 
+quote-patch.txt
+
+5.
+Checking out version 3.0:
+
+git checkout v3.0
+
+6.
+Applying the patch:
+
+patch -p1 < quote-patch.txt
+
+The errors are recorded below:
+
+Hunk #10 FAILED at 876.
+Hunk #11 FAILED at 906.
+Hunk #12 FAILED at 942.
+3 out of 14 hunks FAILED -- saving rejects to file src/diff.c.rej
+
+Hunk #6 FAILED at 433.
+1 out of 9 hunks FAILED -- saving rejects to file src/diff3.c.rej
+
+7.
+We use the git status command:
+
+git status
+
+The results are as below:
+
+# HEAD detached at v3.0
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#       modified:   NEWS
+#       modified:   README
+#       modified:   TODO
+#       modified:   doc/diagmeet.note
+#       modified:   ms/config.bat
+#       modified:   ms/config.site
+#       modified:   po/en.po
+#       modified:   src/analyze.c
+#       modified:   src/cmp.c yes
+#       modified:   src/context.c
+#       modified:   src/diff.c yes
+#       modified:   src/diff.h
+#       modified:   src/diff3.c yes
+#       modified:   src/dir.c yes
+#       modified:   src/ifdef.c
+#       modified:   src/io.c
+#       modified:   src/sdiff.c yes
+#       modified:   src/side.c
+#       modified:   src/system.h
+#       modified:   src/util.c yes
+#       modified:   tests/help-version
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#       NEWS.orig
+#       README-hacking.orig
+#       README-hacking.rej
+#       README.orig
+#       README.rej
+#       cfg.mk.orig
+#       cfg.mk.rej
+#       git-log.txt
+#       git-tags.txt
+#       ms/config.site.orig
+#       quote-patch.txt
+#       src/cmp.c.orig
+#       src/context.c.orig
+#       src/diff.c.orig
+#       src/diff.c.rej
+#       src/diff.h.orig
+#       src/diff3.c.orig
+#       src/diff3.c.rej
+#       src/dir.c.orig
+#       src/sdiff.c.orig
+#       src/system.h.orig
+#       src/util.c.orig
+#       tests/help-version.orig
+no changes added to commit (use "git add" and/or "git commit -a")
+
+8.
+The vc-diff (C-x v =) function compares the work files in the current VC 
+fileset with versions that started with. I could use a prefix argument to 
+prompt for two revisions of the current VC fileset and compare them.
+
+The vc-revert (C-x v u) function reverts the work files in the current VC
+fileset to the last version.
+
+Using the describe-mode function, we found out about diff-apply-hunk and 
+diff-goto-source.
+
+The available commands are listed below:
+
+C-c C-a         diff-apply-hunk
+C-c C-b         diff-refine-hunk
+C-c C-c         diff-goto-source
+C-c C-d         diff-unified->context
+C-c C-e         diff-ediff-patch
+C-c C-f         next-error-follow-minor-mode
+C-c C-n         diff-restrict-view
+C-c C-r         diff-reverse-direction
+C-c C-s         diff-split-hunk
+C-c C-t         diff-test-hunk
+C-c C-u         diff-context->unified
+C-c C-w         diff-ignore-whitespace-hunk
+C-M-i           diff-hunk-next
+M-RET           diff-goto-source
+M-SPC           scroll-up-command
+M--             negative-argument
+M-/             diff-undo
+M-0 .. M-9      digit-argument
+M-<             beginning-of-buffer
+M->             end-of-buffer
+M-?             describe-mode
+M-K             diff-file-kill
+M-N             diff-file-next
+M-P             diff-file-prev
+M-h             describe-mode
+M-k             diff-hunk-kill
+M-n             diff-hunk-next
+M-o             diff-goto-source
+M-p             diff-hunk-prev
+M-{             diff-file-prev
+M-}             diff-file-next
+M-DEL           scroll-down-command
+ESC <backtab>   diff-hunk-prev
+ESC <mouse-2>   diff-goto-source
+C-x 4 A         diff-add-change-log-entries-other-window
+
+ESC <remap> <undo>              diff-undo
+
+The diff-apply-hunk (C-c C-a) function applies this hunk to its target file.
+With the prefix of C-u, it reverts the "new" version into the "old" version.
+
+The diff-goto-source (C-c C-c) function goes to the source file and link 
+with the hunk. This jumps to the new version by default and old version 
+with an argument. If diff-jump-to-old-file is non-nil, it jumps to "old" 
+file. If greater than 8, it also sets diff-jump-to-old-file for next 
+invocation. 
+
+9.
+For those files that don't end in .c, use the command:
+
+emacs "FileName"
+
+C-x v =
+
+C-x v u
+
+yes
+
+The files that are changed are NEWS, README, TODO, doc/diagmeet.note,
+ms/config.bat, ms/config.site, po/en.po, src/diff.h, src/system.h, and
+tests/help-version.
+
+For the files that end in .c, use the command:
+
+emacs "Filename"
+
+C-x v =
+
+C-u C-c C-a
+
+yes
+
+I use the command and revert the patch when it has nothing to do with string
+constants in code.
+
+The files that are changed are src/analyze.c, src/cmp.c, src/context.c,
+src/diff.c, src/diff3.c, src/dir.c, src/ifdef.c, src/io.c, src/sdiff.c,
+src/side.c, and src/util.c.
+
+The files that have character string constants are src/cmp.c, src/diff.c, 
+src/diff3.c, src/dir.c, src/sdiff.c, and src/util.c.  
+
+10.
+To examine and copy rejected patches correspondingly, use the command:
+
+find src/*.c.rej 
+
+I got two files as listed below:
+
+src/diff3.c.rej
+src/diff.c.rej
+
+Then I compare the two reject files with their corresponding files and
+manually edit the files using two terminal windows (by right-clicking),
+replacing the ` with ':
+
+emacs src/diff3.c.rej
+
+emacs src/diff.c.rej
+
+emacs src/diff3.c
+
+emacs src/diff.c
+
+11.
+I first make sure the important files aren't deleted:
+
+mv git-log.txt ..
+
+mv git-tags.txt ..
+
+mv quote-patch.txt ..
+
+git clean -f
+
+12.
+I then run git status and see it reports half-dozen modfied files(listed).
+
+I patch git diff into a file using the command:
+
+git diff > quote-3.0-patch.txt
+
+13.
+I build the modified version of diffutils using the commands:
+(I don't have to apply an additional patch)
+
+./bootstrap
+
+./configure
+
+make
+
+make check
+
+I received a message with 88 passed test and 1 skipped test.
+
+I test the diffutils using the following:
+
+cd src
+
+diff . -
+
+diff --help
+
+The results are following:
+
+src/diff: cannot compare '-' to a directory
+
+For the other one, I see that ` got changed into ':
+For example:
+
+-D NAME  --ifdef=NAME  Output merged file to show '#ifdef NAME' diffs. 
+
+14.
+I first put the modified source code into the correct directory:
+
+cd ~/Desktop/Lab7
+
+mkdir diffutils-3.0-patch
+
+cp -r diffutils/src/*.c diffutils-3.0-patch
+
+I then put the unmodified source code into the correct directory:
+
+git clone ~eggert/src/gnu/diffutils diffutils-old
+
+mkdir diffutils-3.0
+
+cp -r diffutils-old/src/*.c diffutils-3.0
+
+I compare the differences:
+
+diff -pru diffutils-3.0 diffutils-3.0-patch >quote-3.0-test.txt
+
+15.
+I then use diff to compare the two files:
+
+diff quote-3.0-patch.txt quote-3.0-test.txt
+
+The files are not identical, with the differences of the test file having
+some occurence of `, while the patch file fixes it with '.

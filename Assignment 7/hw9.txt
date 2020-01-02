@@ -1,0 +1,99 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 7
+
+1. 
+I make a file for the homework:
+
+emacs hw9.txt
+
+2.
+I check out the version 3.0 of diffutils into a new "quote" branch:
+
+cd diffutils
+
+git checkout v3.0 -b quote
+
+3.
+I install the change by running the patch command:
+
+patch -p1 < ~/Desktop/Lab7/quote-3.0-patch.txt
+
+4.
+The emacs function add-change-log-entry-other-window adds a new entry to the
+change log file for the file currently being edited. It is invoked with the
+keystrokes C-x 4 a.
+
+5.
+I compose an appropriate changeLog entry for the patch using the commands:
+
+emacs ~/Desktop/Lab7/quote-3.0-patch.txt
+
+C-x 4 a
+
+I then compose the message detailing the change from ` to '.
+
+C-x C-c
+
+6.
+I commit to the new branch using the commands:
+
+mv ~/Desktop/lab7/ChangeLog .
+
+git add .
+
+git commit -F ChangeLog
+
+7.
+I generate a new file formatted-patch.txt:
+
+git format-patch -1 --stdout > formatted-patch.txt
+
+8.
+I builded my partner's project through git:
+
+cd diffutils
+
+git am < ~/Desktop/Lab7/edward-formatted-patch.txt
+
+./bootstrap
+
+./configure
+
+make
+
+make check
+
+I observe that all 88 tests passed with no error messages, indicating the patch
+works as intended.
+
+9.
+I make sure my ChangeLog entry works by the following commands:
+
+make distdir 
+
+I then inspect the correct CahngeLog file:
+
+emacs diffutils-3.0.1-1479-dirty/ChangeLog
+
+The ChangeLog details the ChangeLog I created, indicating that my ChangeLog
+entry does indeed work.
+
+10.
+I run the command gitk and find the newest merge using the commands:
+
+ssh -X frankx@lnxsrv07.seas.ucla.edu
+
+cd ~eggert/src/gnu/emacs
+
+gitk
+
+Now I examine the Xming window and the find the newest merge point. The 
+newest merge not newer than 2015-01-25 would be the branch 'master' into
+xwidget by Joakim Verona. For the subwindows, I see one title-like 
+description of the changes that the author made. I see one window with
+the author's contact and name. I see one window with the time of change.
+I also see a window with a ChangeLog entry as well as a window that
+displays any additional comments.
+

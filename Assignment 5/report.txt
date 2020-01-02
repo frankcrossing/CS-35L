@@ -1,0 +1,145 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 5
+
+				lab.txt
+
+1.
+First, I implement the program tr2b.c. The program would transliterate every
+letter in from to a corresponding letter in to. First, I would check for errors
+in the arguments, including incorrect number of arguments, duplicate letters
+in from, and unequal length between from an to. Then, I would loop through
+the standard input, checking if the input (used getchar) is in the from 
+string and output (using putchar) accordingly (other letter if it is, original
+letter if not). The detailed implementation is in the file.
+
+2.
+The program tr2u.c is extremely similar in implementation. The main idea is
+still the same with all the error checking, except I used the write function
+to output the error messages. Additionally, I also used the read function to
+continuously read in the standard input and the write function to continuously
+write to ouput. The detailed implemenation is in the file.
+
+3.
+I create a file that is 5,000,000 bytes using the command:
+
+dd if=/dev/zero of=upload_test bs=5000000 count=1
+
+I then use the strace command for copying file to another file:
+
+strace -c ./tr2b a z < upload_test > tr2b.txt
+
+strace -c ./tr2u a z < upload_test > tr2u.txt
+
+There are 1250 system calls for ./tr2b and 10000024 system calls for ./tr2u
+when copying to another file. tr2u requires many more calls for the read and
+write command compared to ./tr2b.
+
+I then use the strace command for copying file to terminal:
+
+strace -c ./tr2b a z < upload_test
+
+strace -c ./tr2u a z < upload_test
+
+There are 5522 system calls for ./tr2b and 10000024 system calls for ./tr2u
+whe copying to the terminal. tr2u again regquires many more calls for the read
+and write command compared to ./tr2u.
+
+4.
+I use the time command to measure the performance of the programs:
+
+time ./tr2b a z < upload_test > tr2b.txt
+
+This gives a time of 0.588s for real 0.524s for user and 0.021s for sys.
+
+time ./tr2u a z < upload_test > tr2u.txt
+
+This gives a time of 12.475s for real 3.213s for user and 9.214s for sys.
+
+time ./tr2b a z < upload_test
+
+This gives a time of 3.946s for real 0.335s for user and 0.025s for sys.
+
+time ./tr2u a z < upload_test
+
+This gives a time of 17.493s for real 5.061s for user and 12.346s for sys.
+
+./tr2u takes considerably more time to finish than ./tr2b in copying files.
+The difference is as large as several seconds. These results are expected 
+since ./tr2b uses buffered I/O so it would make less system calls and be 
+faster compared to ./tr2u who uses unbuffered I/O, leading to more read and
+write commands being called. 
+
+				report.txt
+Creating the files with numbers of input lines:
+
+emacs upload_test1
+dd if=/dev/zero of=upload_test2 bs=100 count=1
+dd if=/dev/zero of=upload_test3 bs=10000 count=1
+dd if=/dev/zero of=upload_test4 bs=1000000 count=1
+
+Using the time command:
+
+time ./sfrob < upload_test1 > test.txt
+
+real    0m0.005s
+user    0m0.000s
+sys     0m0.003s
+
+time ./sfrob < upload_test2 > test.txt
+
+real    0m0.005s
+user    0m0.000s
+sys     0m0.003s
+
+time ./sfrob < upload_test3 > test.txt
+
+real    0m0.006s
+user    0m0.003s
+sys     0m0.002s
+
+time ./sfrob < upload_test4 > test.txt
+
+real    0m0.139s
+user    0m0.121s
+sys     0m0.008s
+
+time ./sfrobu < upload_test1 > test.txt
+
+real    0m0.004s
+user    0m0.000s
+sys     0m0.003s
+
+time ./sfrobu < upload_test2 > test.txt
+
+real    0m0.005s
+user    0m0.000s
+sys     0m0.003s
+
+time ./sfrobu < upload_test3 > test.txt
+
+real    0m0.035s
+user    0m0.007s
+sys     0m0.025s
+
+time ./sfrobu < upload_test4 > test.txt
+
+real    0m1.811s
+user    0m0.461s
+sys     0m1.335s
+
+As the data is shown, sfrobu takes much more time with large input file than
+sfrob. A possible function fo the CPU time cost is shown as below:
+
+CPU = (Constant)nlogn 
+
+We note that since there is a sort function, the time complexity is nlogn.
+
+The program would use the system calls brk, sbrk.
+The brk() command corresponds to the malloc call. It takes an argument addr,
+which stands for the address of the file. 
+The sbrk() command corresponds to the realloc call. It takes an argument
+increment, and then increments the amount of bytes by the given argument.
+
+The above would be would sfrobu uses to allocate memory.

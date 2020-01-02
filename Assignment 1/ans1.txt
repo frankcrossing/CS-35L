@@ -1,0 +1,153 @@
+Name: Frank Xing
+ID: 905-164-685
+Lab Section 7
+Assignment 1
+
+1. man -k (keyword) 
+
+   command used: man man
+
+2. /usr/local/cs/bin/mv
+
+   /usr/bin/sh
+   
+   commands used:
+   
+   which mv
+
+   which sh
+
+3. tr and pr 
+
+   tr translates or deletes characters
+
+   pr converts text files for printing
+
+   commands used:
+
+   find -name '?r' -executable
+    
+   man tr
+
+   man pr 
+
+4. /usr/bin/emacs-24.3
+
+   commands used: 
+   
+   readlink /usr/bin/emacs
+   
+   readlink /etc/alternatives/emacs
+
+   I looked at /usr/bin/emacs and found it redirects to /etc/alternatives/emacs. Then, I looked under that and found that it redirects to /usr/bin/emacs-24.3.
+
+5. Version number of /usr/bin/gcc: 4.8.5 20150623 (Red Hat 4.8.5-39)
+ 
+   Version number of plain gcc: 9.2.0 
+
+   commands used:
+
+   /usr/bin/gcc --version
+   
+   gcc --version
+
+   The two programs are different because, despite them sharing the same name, they are in different directories. This means that they could be entirely seperate programs altogether despite the same name. This is similar on how one could name two files the same if stored in different directories. The one in /usr/bin/gcc may not have been updated yet.
+
+6. chmod u+sx means that we are assigning the user who owns the file permission to set user or group ID and execute the file. chmod o-w means that we are taking away the users who aren't in the group and who don't own the file their permission to write or edit the file.
+
+   command used: man chmod 
+
+7. commands used:
+
+   cd /usr/local/cs
+ 
+   find -mtime -28 -type d (The -28 is used because it's searching through with in the last four weeks. The -type d is used to search for directories).
+
+   Output (first 5):
+
+   .
+
+   ./src/bison
+
+   ./src/bison/RCS
+
+   ./src/gnuplot
+
+   ./src/gnuplot/RCS
+
+   ...
+
+   Total: 175
+
+8. 253 symbolic links
+
+   commands used:
+
+   which find
+
+   cd /usr/bin
+ 
+   find -type l
+
+9. librom1394.so.0.3.0
+   
+   commands used:
+   
+   cd /usr/lib64
+
+   ls -lt
+
+10. Reading through the manuel, it seems that locale gets most of its data from the settings for the environment variables that control the data. Upon further investigation, we discover that locale(7) is where the environment is being defined and setted.
+    
+    command used: man locale
+   
+11. downcase-region: C-x C-l
+
+    downcase-word: M-l    
+
+    downcase-dwim: M-x ... RET
+
+    command used: C-h a downcase 
+
+12. C-M-r searches backwards through the text using regular expression. 
+
+    C-M-s searches forwards through the text using regular expression.
+
+    C-M-t transposes the previous balanced expressions (S-expressions) with the next one around a certain point.
+
+    C-M-u moves backward out of one level of parentheses.
+
+    C-M-v scrolls the other window that is currently not active.
+
+    commands used:
+    
+    C-h k C-M-r
+
+    C-h k C-M-s
+
+    C-h k C-M-t
+
+    C-h k C-M-u
+
+    C-h k C-M-v
+
+13. C-g means keyboard-quit. It's a Lisp function that signals a quit condition. It beeps at the very top as an editor command. It acts like a reset in emacs, cancelling out a certain action the user is doing.
+
+    command used: C-h k C-g 
+
+14. yank is a function that reinserts or pastes the last stretch of killed test. It acts as the paste part of the copy and paste function. It is invoked using the keystrokes C-y.
+
+    command used: C-h f yank
+
+15. Both the linux and emacs commands list out the file with detailed information, including the permissions, dates, names etc. However, the dired command lists out the information regarding the current and parent directory as well. On the other hand, the ls -l command does not. Dired also allows users to edit the directory and shows the total used and available space for storage. 
+
+    shell commands used:
+    
+    cd /usr/bin
+
+    ls -l
+
+    emacs commands used:
+    
+    C-x d /usr/bin 
+

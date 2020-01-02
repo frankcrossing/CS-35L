@@ -1,0 +1,131 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 9
+
+I first get into the repository using the command:
+
+cd ~eggert/src/gnu/emacs-CS-35L
+
+1. 509 Megabytes of disk space are used to represent the working files in the
+directory. 350 Megabytes are used to represent the Git repository. The biggest
+file in the repository space is 
+.git/objects/pack/pack-24e56b1749b9320c560213d9045fa6cee42b4174.pack
+with about 335 Megabytes of space. This is a big file because objects gathered 
+together from a repository, and each individual object generally stores a lot 
+of information. This file is a compressed file that stores a lot of updates for
+the project.  
+
+These information are found looking at the list outputted by the command: 
+
+du -h 
+
+ls -l `find .git -type f` | sort -n
+
+The second command gives me a list of files with various sizes. I looked 
+through them and found the file that takes up the largest space. 
+
+2. There are a total of 176 local branches and 177 remote branches.
+I used the following commands and piped all the branches to a text file:
+
+git branch > ~/Desktop/Lab9/localBranches.txt
+
+git branch -r > ~/Desktop/Lab9/remoteBranches.txt
+
+cd ~/Desktop/Lab9
+
+emacs localBranches.txt
+
+emacs remoteBranches.txt
+
+Examining the lines in each file (each line is one branch), I would know the 
+total number of local branches and total number of remote branches. 
+
+3. There is one repository called origin that is remote to this repository.
+Origin is located at https://git.savannah.gnu.org/git/emacs.git for both fetch
+and push locations.
+
+The command used to find this out is: 
+
+git remote -v
+
+4. The ten local branches most recently commited to are listed below:
+   1. master (2019-11-25)
+   2. scratch/joaot/make-completion-at-point-function (2019-11-20)
+   3. feature/windows-with-utils (2019-11-18)
+   4. scratch/completion-api (2019-11-16)
+   5. scratch/a-modest-completion-redesign-proposal (2019-11-10)
+   6. scratch/fido-mode (2019-11-05)
+   7. feature/gnus-select2 (2019-11-03)
+   8. feature/extend_face_id (2019-10-14)
+   9. scratch/jit-lock-antiblink-cleaned-up (2019-10-10)
+   10. emacs-26 (2019-10-07)
+     
+The command used to find this out is as follows:
+
+git for-each-ref --sort=-committerdate refs/heads/ --format='%(committerdate:short) %(refname:short)'
+
+5. There are 139583 commits on the master branch.
+  
+The command used to find this out is: 
+
+git rev-list --count master
+
+6. There are 143910 commits across all branches as found out by the command 
+listed below. I then calculated and saw that 97 percent of any commits in any
+branch are also in the master branch.
+
+The command used to find this out is:
+
+git rev-list --count --all
+
+7. The ten people with the most master-branch commits after 2013 listed below:
+   1. Eli Zaretskii (3691)  
+   2. Glenn Morris (3644)
+   3. Paul Eggert (3604)
+   4. Lars Ingebrigtsen (1806)
+   5. Stefan Monnier (1784)
+   6. Michael Albinus (1571) 
+   7. Dmitry Gutov (619)
+   8. Noam Postavsky (576)
+   9. Alan Mackenzie (471)
+   10. Juri Linkov (469)
+  
+The command used to find this out is as follows:
+
+git shortlog --since "JAN 1 2013" -s -n master
+
+8. To visualize the commit graph, I use the command as follows (I logged in 
+with ssh -X for this process to work):
+
+gitk
+
+I then inputted each ID and found each commit in Xming to look for relations
+between them. IDs are listed below:   
+   1. 4ea37c2b8b0c5a68fde59770c3536195e0972217
+   2. 977cd6cb28a37744966ec62f70cf62659f6f302a
+   3. 625cee531623feddbe3174fad52c7db96ec60bb3
+   4. 5490ccc5ebf39759dfd084bbd31f464701a3e775
+   5. 0c06b93c1e467debd401eb0b3be4652fde14fa95
+   6. 820739bbb572b30b6ce45756c9960e48dca859af
+   7. 00e4e3e9d273a193620c3a4bb4914e555cb8e343
+   8. 49cd561dc62ea6b3fbedab7aef0f020733f4cf09
+   9. abcb2e62dae6aa26308f7ac9efc89247f89cbe65
+   10. 98ac36efe4ce4bd3a0bca76fc73ce6c7abaa4371	
+ 
+The relationship is as roughly illustrated as follows:
+
+10------------------|
+|		    |
+...		    |	
+|		   ...
+9-------------------|
+|        6--7--...--8
+...      |
+|      ...--| 
+5----...----4
+|           |
+...	  ...
+|           |
+2           3		
+|-----1-----|           

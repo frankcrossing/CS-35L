@@ -1,0 +1,120 @@
+#!/bin/sh
+
+DIRECTORY=""
+RECURSION="FALSE"
+
+if [ $# -ge 3 ]
+then
+    echo "Improper Operands." >&2
+    exit 1
+fi
+
+if [ $# -eq 0 ]
+then
+    DIRECTORY="."
+    RECURSION="FALSE"
+fi
+
+if [[ $# -eq 1 && $1 != '-r' ]]
+then
+    DIRECTORY="$1"
+    RECURSION="FALSE"
+fi
+
+if [[ $# -eq 1 && $1 = '-r' ]]
+then
+    DIRECTORY="."
+    RECURSION="TRUE"
+fi
+
+if [[ $# -eq 2 && $1 = '-r' ]]
+then
+    DIRECTORY="$2"
+    RECURSION="TRUE"
+fi
+
+if [[ $# -eq 2 && $1 != '-r' ]]
+then
+    echo "Improper Operands" >&2
+    exit 1
+fi
+
+echo "$DIRECTORY" | grep -E -q "^-|\s"
+
+if [ "$?" -eq 0 ]
+then
+    echo "Invavlid directory name." >&2
+    exit 1
+fi
+
+LOCATION=$(find "$DIRECTORY" -type d)
+
+if [ "$LOCATION" = "" ]
+then
+    echo "Can't locate directory." >&2
+    exit 1
+fi
+
+if [ "$RECURSION" = "TRUE" ]
+then
+    ALL=$(find "$DIRECTORY")
+else
+    ALL=$(find "$DIRECTORY" -maxdepth 1)
+fi
+
+echo -e "$ALL" | sort -f | uniq -D -i
+
+AL=$(echo -e "$ALL" | sort -u)
+   
+while read DIRECT
+do
+    NAME=$(basename "$DIRECT")
+
+
+    echo "$NAME" | grep -E -q "[^A-Za-z\._-]"
+
+
+    if [ "$?" -eq 0 ]
+    then
+        if [[ -d "${DIRECT}" ]]
+        then
+            echo "${DIRECT}/"
+        else
+            echo "${DIRECT}"
+        fi
+	continue;
+    fi
+    echo "$NAME" | grep -E -q "^-|\s"
+    if [ "$?" -eq 0 ]
+    then
+        if [[ -d "${DIRECT}" ]]
+        then
+            echo "${DIRECT}/"
+        else
+            echo "${DIRECT}"
+        fi
+	continue
+    fi
+    echo "$NAME" | grep -E -q "^\.|\s"
+    if [[ "$?" -eq 0 && "$NAME" != "." && "$NAME" != ".." ]]
+    then
+        if [[ -d "{$DIRECT}" ]]
+        then
+            echo "${DIRECT}/"
+        else
+            echo "${DIRECT}"
+        fi
+	continue
+    fi
+    echo "$NAME" | grep -E -q ".{15,}"
+    if [ "$?" -eq 0 ]
+    then
+        if [[ -d "${DIRECT}" ]]
+        then
+            echo "${DIRECT}/"
+        else
+            echo "${DIRECT}"
+        fi
+	continue
+    fi
+done <<< "$AL"

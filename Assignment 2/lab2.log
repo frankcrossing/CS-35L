@@ -1,0 +1,94 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7 
+Assignment 2
+
+I first change the LC_CTYPE of locale by using the command: export LC_ALL='C'. 
+
+Then, I use sort function to create the file by using the commands:
+
+emacs words
+
+sort -o words /usr/share/dict/words
+
+I now get a copy of the website by using the command:
+
+curl -o Assign2.txt web.cs.ucla.edu/classes/fall19/cs35L/assign/assign2.html
+
+Then, I run the following commands:
+
+1. tr -c 'A-Za-z' '[\n*]' < Assign2.txt > com1.txt
+
+The command would output all the characters in the file that is either an uppercase or lowercase letter. If the character is not a letter, it would become a new line symbol and the next character would be on the next new line.  
+
+2. tr -cs 'A-Za-z' '[\n*]' < Assign2.txt > com2.txt
+
+The command would do the same thing as the command above, filtering out the non letter characters. However, this time, there wouldn't be a new empty line created when they encounter a non letter character. 
+
+3. tr -cs 'A-Za-z' '[\n*]' < Assign2.txt | sort > com3.txt
+
+The command would keep all the uppercase and lowercase letters while getting rid of the non letter characters. There would be no empty lines in between. This time, they would also sort it alphabetically, from A-Z.
+
+4. tr -cs 'A-Za-z' '[\n*]' < Assign2.txt | sort -u > com4.txt
+
+The command would keep all the uppercase and lowercase letters while also sorting them alphabetically, from A-Z. This command also removes repetitions, so there is only one occurence of each word. 
+
+5. tr -cs 'A-Za-z' '[\n*]' < Assign2.txt | sort -u | comm - words > com5.txt
+
+The command would keep all the uppercase and lowercase letters while also sorting them alphabetically, from A-Z. There would only be one occurence of each word. This file contains each word from both of these files. 
+
+6. tr -cs 'A-Za-z' '[\n*]' < Assign2.txt | sort -u | comm -23 - words > com6.txt # ENGLISHCHECKER
+
+The command would keep one occurence of all the letters sorted from A-Z from the two files. This new command would only print out the "English" words, basically the words in the text file "Assign2.txt" that's not in the dictionary "file.txt".
+
+The script is as follows:
+
+#!/bin/sh
+
+sed 's/?//g' |  #Remove the ? character
+
+sed 's/<u>//g' | #Remove the <u> characters
+
+sed 's/<\/u>//g' | #Remove the </u> characters
+
+grep -E "<td.*>.*<\/td>" | #Extract all phrases surrounded by td tags
+
+sed 's/<\/td>//g' | #Remove all </td> characters
+
+sed 's/<\/small>//g' | #Remove all </small> characters
+
+sed 's/<\/br>//g' | #Remove all </br> characters
+
+sed 's/<\/font>//g' | #Remove all </font> characters
+
+sed 's/<td.*>//g' | #Remove all <td ...> characters
+
+tr [:upper:] [:lower:] | #Translate all uppercase to lowercase
+
+sed '3,4d' | #Delete the lines that go  ..........
+
+sed "/b\|c\|d\|f\|g\|j\|q\|r\|s\|t\|v\|x\|y\|z\|,\|-/d" | #Remove all lines with non-Hawaiian characters
+
+sed 's/ /\n/g' | #Replace Spaces with new lines
+
+tr '`' "\'" |  #Replace backticks with apostrophes
+
+sort -u | #Sorting
+
+sed '/^ *$/d' #Remove empty lines
+
+We then make this script executable through chmod u+x.
+
+The script has some bugs in that the English words made entirely from the Hawaiian traditional orthography will also remain in the dictionary. For example, a word like "women" would bypass the Hawaiian checker since it only contains traditional Hawaiian orthography.
+
+The command HAWAIIANCHECKER can be ran with the following command:
+    tr [:upper:] [:lower:] | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - hwords
+
+There are 545 mispelled Hawaiian words caught by Hawaiian checker.
+There are 93 mispelled English words caught by English checker. 
+
+There are 2 words "misspelled" as English but not Hawaiian, Examples are of two words "misspelled" as English but not Hawaiian are wiki and lau. 
+There are 510 words "misspelled" as Hawaiian but not as English. Examples of words "misspelled" as Hawaiian but not English are entries and command.
+
+
+

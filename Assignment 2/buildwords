@@ -1,0 +1,34 @@
+#!/bin/sh
+
+sed 's/?//g' |  #Remove the ? character
+
+sed 's/<u>//g' | #Remove the <u> characters 
+
+sed 's/<\/u>//g' | #Remove the </u> characters
+
+grep -E "<td.*>.*<\/td>" | #Extract all phrases surrounded by td tags
+
+sed 's/<\/td>//g' | #Remove all </td> characters
+
+sed 's/<\/small>//g' | #Remove all </small> characters
+
+sed 's/<\/br>//g' | #Remove all </br> characters
+
+sed 's/<\/font>//g' | #Remove all </font> characters
+
+sed 's/<td.*>//g' | #Remove all <td ...> characters
+
+tr [:upper:] [:lower:] | #Translate all uppercase to lowercase
+
+sed '3,4d' | #Delete the lines that go  ..........
+
+sed "/b\|c\|d\|f\|g\|j\|q\|r\|s\|t\|v\|x\|y\|z\|,\|-/d" | 
+#Remove all lines with non-Hawaiian characters
+
+sed 's/ /\n/g' | #Replace Spaces with new lines
+
+tr '`' "\'" |  #Replace backticks with apostrophes
+
+sort -u | #Sorting
+
+sed '/^ *$/d' #Remove empty lines

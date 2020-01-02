@@ -1,0 +1,47 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 8
+
+Steps to create the necessary files:
+
+1. Generating a key: gpg2 --gen-key
+
+2. Exporting a key:
+
+gpg2 --armor --export frankcrossing@g.ucla.edu > hw-pubkey.asc 
+
+3. Generate detached signature for eeprom:
+
+gpg2 --clearsign eeprom
+
+gpg2 -b eeprom 
+
+Questions:
+
+1. Even if other teams observe all the bytes going across the network, the
+resulting network would still be observed. This is because SSH is encrypted
+and the data is protected. Only the server and the client can decrypt and 
+encrypt the message.
+
+(1) If we finished all the client-server setup, that means we could log in into
+each other's server without the use of passwords. In that case, the network
+would remain less secure if they tapped our keyboards since they would gain 
+knowledge of our data by observing and recording our transferred data despite
+not knowing our passcodes.
+
+(2) If they have access to our physical copy of the USB, then the network 
+would not be as secure anymore. This is because they would then have access to
+the .ssh file and correspondingly our private key. This would woul allow them
+to access the server despite not knowing the password.
+
+2. The gpg2 --verify command doesn't truly verify I personally created the file
+in question. This is because it compares the file with a detached signature
+for matching purposes. This would be troublesome if the attack creates a 
+seperate signature after messing with data. The verify commands would verify
+that as valid becayse it checks the two matches and not the actual signature.
+
+To fix this problem, I should use something like a digital certificate that
+confirms the public key ownership by a specific named subject. They would be 
+able to verify signatures concerning the private key that corresponds to the
+certified public key. 

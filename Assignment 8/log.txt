@@ -1,0 +1,103 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 8
+
+The set up instructions can be found below:
+
+1. I connected my Beaglebone to my computer with the USB cable.
+
+2. I find the Beaglebone as a storage device it and open it. After it opened,
+I clicked on the START.htm icon and got to the webpage.
+
+3. After I'm on the webpage, I checked the requirements and installed the 
+corresponding needed drivers and restarted my computer. This ensured that all
+the requirements are fulfilled.
+
+4. I then input the 192.168.7.2 as the ip address in putty, using the username
+root to access. Since my copy of the raspberry pi is old, I used the old
+password to access it.
+
+5. After being in the pi, I connect to UCLA_WEB using the following commands:
+
+connmanctl
+
+enable wifi
+
+scan wifi 
+
+services
+
+agent on
+
+connect wifi_2cf7f1066697_55434c415f574542_managed_none
+
+quit
+
+6. I get my ip address using the command: ifconfig
+The ip address is 172.28.233.151.
+
+7. I update the database using the commands:
+
+sudo apt-get update
+
+sudo apt-get install xauth
+
+sudo apt-get install xvfb
+
+sudo apt-get install firefox-esr-l10n-en-gb
+
+The server side can be done with the following commands:
+
+1. Generate public and private keys: ssh-keygen
+The key generated is roots.
+
+2. Create an account for client on server using the commands:
+
+sudo useradd -d /home/edward-client -m edward
+
+sudo passwd edward
+
+The password set is 123.
+
+3. Create .ssh directory for the new user using the commands:
+
+cd /home/edward-client
+
+sudo mkdir .ssh
+
+4. Change ownership and permssion on .ssh directory using the commands:
+
+sudo chown -R edward .ssh
+
+sudo chmod 700 .ssh
+
+The client side can be done using the commands:
+
+1. Generate public and private keys: ssh-keygen
+The key generated is roots.
+
+2. Copy public key to the server for key-based authentication:
+
+ssh-copy-id -i frankx@172.28.232.166 
+
+3. Add private key to authentication agent using the commands:
+
+eval `ssh-agent`
+
+ssh-add
+
+4. SSH to server using the commands:
+
+ssh -X frankx@172.28.232.166
+
+5. I then run the commands for testing:
+
+firefox
+
+This command will being up the firefox browser successfully on my labtop. The
+command would also work if I used the trusted forwarding (-Y) with the firefox 
+window opening up in that situation also.   
+
+
+

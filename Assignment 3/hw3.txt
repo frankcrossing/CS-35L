@@ -1,0 +1,46 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7 
+Assignment 3
+
+1.
+The patch would improve the performance of ls because it would remove an if 
+statement for ignore_mode. This would reduce the number of checks by 1 and 
+reduce the time it takes to run. Additionally, it would also ensure the -a
+option would not override the -A option anymore, creating the correct behavior
+for that option.
+
+2.
+The company should watch for the possibility that the company may have old bash
+script files that depend on the old ls -a -A command. Since they updated and 
+patched the file, ls -a -A would no longer do what it used to do. The new 
+version of Coreutils might introduce the problem of old bash scripts not doing 
+what they are meant to do. The company should remember to update their old
+files as well. Finally, -a -A and -A -a would do different things in the new
+patch, where previously it doesn't matter which order they typed it in. 
+
+3.
+When the script is invoked on an empty file, there would be an index error 
+being detailed. When examined at the code, I see that the condition doesn't
+specify the case when numlines = 0. Even so, it still tries to write a certain
+line's index when there are 0 lines, which would lead to an invalid index and 
+undefined behavior. This would cause the script to fail with empty files.  
+
+4.
+When invoked with Python 3, the script would output a syntax error near the
+IOError part. This is because IOError behaves differently in python2 than in
+python3 and reusing the syntax in python2 would cause an error when running the
+script as python3. The error would be passing in a tuple in as the error 
+variable (Ex: except IOError as (a,b)). The correct way of doing it in python3 
+would be only passing in one variable into IOError.
+
+5.
+When invoked with Python 2 instead of Python 3, there would be a small
+difference when invoking the -r command without the -n command. When the script
+goes in an infinite loop and the user stops it, Python 2 would sometimes 
+output some additional lines specifying that close failed in file destructor 
+and that sys.excepthook is missing as well as sys.stderr being lost. This is 
+happening because the script is piping something to standard output despite it 
+never reading from the standard input and the code sys.stdout.write or print
+would cause this error to form. Python 2 would print this error out. 
+

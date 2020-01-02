@@ -1,0 +1,97 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 3
+
+I first verified the problem by using the commands: 
+
+cd /usr/bin   
+
+ls -a -A
+
+The probblem still exists since . and .. are still being printed.
+
+I then check the Coreutils version with the command:
+
+ls --version
+
+The coreutils versison is 8.22 that corresponds to /usr/bin/ls.
+
+We then follow the steps to build the copy:
+
+1.
+Getting the copies:
+curl -O ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+curl -O ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz.sig
+curl -O https://ftp.gnu.org/gnu/gnu-keyring.gpg
+
+Verifying signature:
+gpg --verify --keyring ./gnu-keyring.gpg coreutils-8.29.tar.xz.sig
+
+Some problems that occured include the following:
+
+This key is not certified with a trusted signautres!
+There is no indiciation that the signature belongs to the owner.
+
+This problem may occur because the keyring cannot be verifed by the program.
+Therefore, anyone could create that keyring and two fake files to fool the 
+system into believing it was secure. The user could then be compromised with a 
+security issue.
+
+2.
+Decompress the file:
+tar -xJvf coreutils-8.29.tar.xz
+
+Compile and install the file:
+cd coreutils-8.29
+./configure --prefix=/u/cs/ugrad/frankx/Desktop/Lab3/coreutils
+make
+make install
+
+There were no problems in this step of the process.
+
+3.
+Reproducing the bug:
+cd ~/Desktop/Lab3/coreutils
+bin/ls -a -A 
+
+The bug is still present as . and ... are still being printed out.
+
+4.
+Creating the patch file:
+cd ~/Desktop/Lab3/coreutils-8.29
+emacs patch_file
+
+I then copied the contents into the file.
+
+Then I patch the file:
+patch -p1 < patch_file
+
+5.
+We run the commands:
+cd ~/Desktop/Lab3/coreutils-8.29
+
+This command would be needed to ensure we're in the right directory for the
+following commands.
+
+autoreconf -fi
+
+This command would be needed to as when decompressing the file in a random
+directory, one may be missing a few auxiliary files needed to run make. This
+command would ensure that all the missing file would be configured before
+running the make command.
+
+make  
+
+This command would be needed to build the correct fixed version without 
+installing it into the temporary directory so I can do comparisons between the
+fixed and non-fixed version.
+
+6.
+The new command worked as intended.
+The new command is tested using the command:
+cd ~/Desktop/Lab3/coreutils-8.29/src
+./ls -a -A
+
+The old command still prints out . and ..:
+ls -a -A

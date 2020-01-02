@@ -1,0 +1,131 @@
+Name: Frank Xing
+ID: 905-164-685
+Section 7
+Assignment 4
+
+First, download the old version of ls in coreutils:
+
+curl -O https://web.cs.ucla.edu/classes/fall19/cs35L/assign/coreutils-with-bug.tar.gz
+
+Then, extract the tar file:
+
+tar -xzvf coreutils-with-bug.tar.gz 
+
+We then configure and make the file:
+
+cd coreutils-with-bug
+
+./configure --prefix=/u/cs/ugrad/frankx/Desktop/Lab4/bug-coreutils
+
+When I try the command: "make" and build it as it is, there would be an error 
+reported with conflicting types for 'futimens'. It then proceeds to list out
+a method named that returns an int and one that returns an extern int. Since
+the return type si different while the name remains the same, the C syntax
+won't allow that, leading the file to be unable to built.
+
+I patch the file using the command:
+
+cd ~/Desktop/Lab4/coreutils-with-bug/
+
+curl -O http://web.cs.ucla.edu/classes/fall19/cs35L/assign/coreutils.diff
+
+patch -p0 < coreutils.diff
+
+Running the patch again with "make", the bug apppears to be resolved. This is
+because the patch file changes the "int futimens" into "coreutils_futimens" in
+all instances of the file. Additionally, it also changes all instances of 
+"static bool tee" to "static bool coreutils_tee". This gets rid of all the same
+name functions, allowing for a successful build.
+
+We then make the temporary directory according to the instructions.
+
+We reproduce the problem by using the commands:
+
+cd $tmp
+
+TZ=UTC0 ~/Desktop/Lab4/coreutils-with-bug/src/ls -lt --full-time wwi-armistice-cs35L now now1
+
+We see the problem is being reproduced.
+
+We now fix the problem and pipe the fix into a lab4.diff:
+
+Fixing and Debugging the problem commands:
+
+gdb ~/Desktop/Lab4/coreutils-with-bug/src/ls
+info functions 
+break compare_mtime
+r $tmp -lt
+list
+
+We see the function compare_mtime calls cmp_mtime so we examined that function
+using the commands:
+
+break cmp_mtime
+stepi
+list 
+
+We then examine the timespec_cmp:
+
+break timespec_cmp
+stepi
+
+At this point, we examine the time values:
+
+info locals
+
+We now observe the function timespec_cmp has a problem.
+
+The problem is with the how they calculate diff in the timespec_cmp function.
+The differece is a very large negative number. However, a file created with a 
+time in the past should lead to a positive difference. The negative difference
+is most likely caused by overflow that occured in the subtraction. Since the 
+function is subtracting two numbers with a large difference (a lot of seconds 
+have passed in a 100 year), there would be an overflow since the value exceeds 
+the threshold. To fix it, we should just do a direct comparison instead.
+
+We fix the problem with the following commands:
+
+cd ~/Desktop/Lab4/coreutils-with-bug
+
+cp lib/timespec.h timespec.h
+
+emacs timespec.h
+
+We fix the problem by introducing a new way of comparison to prevent overflow.
+This change is detailed in the diff file.
+
+Creating the diff file:
+
+emacs lab4.diff
+
+diff -u lib/timespec.h timespec.h > lab4.diff
+
+Change the 2nd line to lib/timespec.h to ensure correct patching.
+
+Create a ChangeLog entry:
+
+C-x 4 a
+
+Patching the new file:
+
+patch -p0 < lab4.diff
+
+make
+
+We then test the new file, and find it working as intended. 
+
+We reproduce the problem in the home directory starting with the command:
+
+cd ~
+
+We then start with the "touch -d" command given and create the three files.
+Using the command to run:
+
+TZ=UTC0 ~/Desktop/Lab4/coreutils-with-bug/src/ls -lt --full-time wwi-armistice-cs35L now now1
+
+We observe that the bug is that the date displayed when using ls in the home
+directory is that the date meant to be in the past is actually displayed in
+the future. This is because of the different ways of encoding time between the
+one in the temp directory (local machine) and the one on SEASnet. 
+
+
